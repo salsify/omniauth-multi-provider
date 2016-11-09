@@ -5,13 +5,13 @@ module OmniAuth
                   :callback_path_regex, :provider_path_prefix,
                   :identity_provider_options_generator
 
-      def initialize(path_prefix: OmniAuth.config.path_prefix,
-                     identity_provider_id_regex: /\w+/,
-                     &provider_generator)
+      def initialize(path_prefix:,
+                     identity_provider_id_regex:,
+                     &identity_provider_options_generator)
         raise 'Missing provider options generator block' unless block_given?
 
         @path_prefix = path_prefix
-        @identity_provider_options_generator = provider_generator
+        @identity_provider_options_generator = identity_provider_options_generator
         @identity_provider_id_regex = identity_provider_id_regex
 
         # Eagerly compute these since lazy evaluation will not be threadsafe
@@ -29,6 +29,16 @@ module OmniAuth
         }
       end
 
+      def request_path?(env)
+        path = current_path(env)
+        !!request_path_regex.match(path)
+      end
+
+      def callback_path?(env)
+        path = current_path(env)
+        !!callback_path_regex.match(path)
+      end
+
       def setup(env)
         identity_provider_id = extract_identity_provider_id(env)
         if identity_provider_id
@@ -37,6 +47,8 @@ module OmniAuth
           add_identity_provider_options(strategy, env, identity_provider_id)
         end
       end
+
+      private
 
       def add_path_options(strategy, identity_provider_id)
         strategy.options.merge!(
@@ -51,16 +63,6 @@ module OmniAuth
       rescue => e
         result = strategy.fail!(:invalid_identity_provider, e)
         throw :warden, result
-      end
-
-      def request_path?(env)
-        path = current_path(env)
-        !!request_path_regex.match(path)
-      end
-
-      def callback_path?(env)
-        path = current_path(env)
-        !!callback_path_regex.match(path)
       end
 
       def current_path(env)
