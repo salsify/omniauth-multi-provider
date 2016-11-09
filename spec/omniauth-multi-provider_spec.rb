@@ -1,3 +1,4 @@
+# rubocop:disable Style/FileName, RSpec/FilePath
 require 'spec_helper'
 
 describe OmniAuth::MultiProvider do
@@ -5,3 +6,4 @@ describe OmniAuth::MultiProvider do
     expect(OmniAuth::MultiProvider::VERSION).not_to be nil
   end
 end
+# rubocop:enable Style/FileName, RSpec/FilePath

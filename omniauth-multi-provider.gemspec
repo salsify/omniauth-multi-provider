@@ -12,14 +12,12 @@ Gem::Specification.new do |spec|
   spec.summary       = 'OmniAuth support for multiple providers of an authentication strategy'
   spec.description   = spec.summary
   spec.homepage      = 'https://github.com/salsify/omniauth-multi-provider'
-  
+
   spec.license       = 'MIT'
-  
 
   # Set 'allowed_push_post' to control where this gem can be published.
   if spec.respond_to?(:metadata)
     spec.metadata['allowed_push_host'] = 'https://rubygems.org'
-  
   else
     raise 'RubyGems 2.0 or newer is required to protect against public gem pushes.'
   end
