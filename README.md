@@ -1,7 +1,7 @@
 # OmniAuth MultiProvider
 
 This is a simple extension to [omniauth](https://github.com/omniauth/omniauth) for supporting 
-multiple identity provider instances of a given type e.g. multiple SAML 
+multiple identity provider instances of a given type e.g. multiple SAML or OAuth2
 identity providers. It is a generalization of the 
 [omniauth-multi-provider-saml](https://github.com/salsify/omniauth-multi-provider-saml).
 
@@ -23,8 +23,7 @@ Or install it yourself as:
 
 ## Setup
 
-**I would highly recommend first getting your setup to work with a single identity provider before 
-attempting to use this gem.** 
+**Getting your setup to work with a single identity provider before attempting to use this gem is highly recommended.** 
 
 The setup process consists of the following steps:
 
@@ -66,14 +65,24 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                                    name_identifier_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
                                    issuer: 'salsify.com',
                                    allowed_clock_drift: 5.seconds) do |identity_provider_id, rack_env|
-      identity_provider = IdentityProvider.find(identity_provider_id)
-      # Optionally store a reference to the identity provider in the Rack environment
-      # so you can reference it in your OmniAuth callbacks controller
-      rack_env['salsify.external_identity_provider'] = identity_provider
-      # Any dynamic options returned by this block will be merged in with any statically
-      # configured options for the identity provider type e.g. issuer in this example.
-      identity_provider.options
-    end
+    identity_provider = SAML::IdentityProvider.find(identity_provider_id)
+    # Optionally store a reference to the identity provider in the Rack environment
+    # so you can reference it in your OmniAuth callbacks controller
+    rack_env['salsify.saml_identity_provider'] = identity_provider
+    # Any dynamic options returned by this block will be merged in with any statically
+    # configured options for the identity provider type e.g. issuer in this example.
+    identity_provider.options
+  end
+  
+  # This also works with multiple provider types
+  OmniAuth::MultiProvider.register(self,
+                                   provider_name: :oauth2,
+                                   identity_provider_id_regex: /\d+/,
+                                   path_prefix: '/auth/oauth2') do |identity_provider_id, rack_env|
+    identity_provider = OAuth2::IdentityProvider.find(identity_provider_id)
+    rack_env['salsify.oauth2_identity_provider'] = identity_provider
+    identity_provider.options
+  end
 end
 ```
 
