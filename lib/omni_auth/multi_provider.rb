@@ -1,3 +1,5 @@
+require 'omniauth'
+
 require 'omni_auth/multi_provider/handler'
 require 'omni_auth/multi_provider/version'
 

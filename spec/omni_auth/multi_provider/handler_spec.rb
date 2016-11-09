@@ -15,8 +15,7 @@ describe OmniAuth::MultiProvider::Handler do
   end
 
   let(:strategy) do
-    options = {}
-    instance_double(OmniAuth::Strategy, options: options)
+    instance_double(OmniAuth::Strategy, options: {})
   end
 
   let(:provider_id) { 12345 }
@@ -31,7 +30,9 @@ describe OmniAuth::MultiProvider::Handler do
 
   describe "#provider_options" do
     it "returns a hash with setup, request_path, callback_path" do
-      expect(handler.provider_options).to include(:setup, :request_path, :callback_path)
+      expect(handler.provider_options).to eq(setup: handler.method(:setup),
+                                             request_path: handler.method(:request_path?),
+                                             callback_path: handler.method(:callback_path?))
     end
   end
 
@@ -96,7 +97,7 @@ describe OmniAuth::MultiProvider::Handler do
         allow(strategy).to receive(:fail!).and_return(failure_result)
       end
 
-      it "throws a warden" do
+      it "throws a warden symbol" do
         expect { handler.setup(env) }.to throw_symbol(:warden, failure_result)
       end
 
