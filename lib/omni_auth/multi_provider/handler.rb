@@ -2,8 +2,7 @@ module OmniAuth
   module MultiProvider
     class Handler
       attr_reader :path_prefix, :provider_instance_path_regex, :request_path_regex,
-                  :callback_path_regex, :provider_path_prefix,
-                  :identity_provider_options_generator
+                  :callback_path_regex, :identity_provider_options_generator
 
       def initialize(path_prefix:,
                      identity_provider_id_regex:,
@@ -15,7 +14,6 @@ module OmniAuth
         @identity_provider_id_regex = identity_provider_id_regex
 
         # Eagerly compute these since lazy evaluation will not be threadsafe
-        @provider_path_prefix = @path_prefix
         @provider_instance_path_regex = /^#{@path_prefix}\/(?<identity_provider_id>#{@identity_provider_id_regex})/
         @request_path_regex = /#{@provider_instance_path_regex}\/?$/
         @callback_path_regex = /#{@provider_instance_path_regex}\/callback\/?$/
@@ -52,8 +50,8 @@ module OmniAuth
 
       def add_path_options(strategy, identity_provider_id)
         strategy.options.merge!(
-          request_path: "#{provider_path_prefix}/#{identity_provider_id}",
-          callback_path: "#{provider_path_prefix}/#{identity_provider_id}/callback"
+          request_path: "#{path_prefix}/#{identity_provider_id}",
+          callback_path: "#{path_prefix}/#{identity_provider_id}/callback"
         )
       end
 
