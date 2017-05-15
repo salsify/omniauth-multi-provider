@@ -151,7 +151,7 @@ describe OmniAuth::MultiProvider::Handler do
     describe "custom callback_path" do
       let(:handler_options) do
         {
-          callback_postfix: "wow"
+          callback_postfix: 'wow'
         }
       end
 
