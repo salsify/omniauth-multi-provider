@@ -11,7 +11,11 @@ describe OmniAuth::MultiProvider::Handler do
 
   let(:path_prefix) { '/auth/saml' }
   let(:handler) do
-    described_class.new(path_prefix: path_prefix, identity_provider_id_regex: /\d+/, &provider_options_generator)
+    described_class.new(path_prefix: path_prefix, identity_provider_id_regex: /\d+/, **handler_options, &provider_options_generator)
+  end
+
+  let(:handler_options) do
+    {}
   end
 
   let(:strategy) do
@@ -143,43 +147,94 @@ describe OmniAuth::MultiProvider::Handler do
   end
 
   describe "#callback_path?" do
-    context "when the path is a callback path" do
-      let(:path) { "#{path_prefix}/#{provider_id}/callback" }
 
-      it "returns true" do
-        expect(handler.callback_path?(env)).to be(true)
+    describe "custom callback_path" do
+      let(:handler_options) do
+        {
+          callback_suffix: 'wow'
+        }
+      end
+
+      context "when the path is a callback path" do
+        let(:path) { "#{path_prefix}/#{provider_id}/wow" }
+
+        it "returns true" do
+          expect(handler.callback_path?(env)).to be(true)
+        end
+      end
+
+      context "when the path is a request path" do
+        let(:path) { "#{path_prefix}/#{provider_id}" }
+
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
+      end
+
+      context "when the path is a callback path with a trailing segment" do
+        let(:path) { "#{path_prefix}/#{provider_id}/wow/foo" }
+
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
+      end
+
+      context "when the path is a callback path with a leading segment" do
+        let(:path) { "/foo#{path_prefix}/#{provider_id}/wow" }
+
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
+      end
+
+      context "when the path is a callback path with an invalid provider id" do
+        let(:path) { "#{path_prefix}/foobar/wow" }
+
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
       end
     end
 
-    context "when the path is a request path" do
-      let(:path) { "#{path_prefix}/#{provider_id}" }
+    describe "default callback_path" do
+      context "when the path is a callback path" do
+        let(:path) { "#{path_prefix}/#{provider_id}/callback" }
 
-      it "returns false" do
-        expect(handler.callback_path?(env)).to be(false)
+        it "returns true" do
+          expect(handler.callback_path?(env)).to be(true)
+        end
       end
-    end
 
-    context "when the path is a callback path with a trailing segment" do
-      let(:path) { "#{path_prefix}/#{provider_id}/callback/foo" }
+      context "when the path is a request path" do
+        let(:path) { "#{path_prefix}/#{provider_id}" }
 
-      it "returns false" do
-        expect(handler.callback_path?(env)).to be(false)
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
       end
-    end
 
-    context "when the path is a callback path with a leading segment" do
-      let(:path) { "/foo#{path_prefix}/#{provider_id}/callback" }
+      context "when the path is a callback path with a trailing segment" do
+        let(:path) { "#{path_prefix}/#{provider_id}/callback/foo" }
 
-      it "returns false" do
-        expect(handler.callback_path?(env)).to be(false)
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
       end
-    end
 
-    context "when the path is a callback path with an invalid provider id" do
-      let(:path) { "#{path_prefix}/foobar/callback" }
+      context "when the path is a callback path with a leading segment" do
+        let(:path) { "/foo#{path_prefix}/#{provider_id}/callback" }
 
-      it "returns false" do
-        expect(handler.callback_path?(env)).to be(false)
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
+      end
+
+      context "when the path is a callback path with an invalid provider id" do
+        let(:path) { "#{path_prefix}/foobar/callback" }
+
+        it "returns false" do
+          expect(handler.callback_path?(env)).to be(false)
+        end
       end
     end
   end

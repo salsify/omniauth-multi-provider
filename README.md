@@ -61,6 +61,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                                    provider_name: :saml,
                                    identity_provider_id_regex: /\d+/,
                                    path_prefix: '/auth/saml',
+                                   callback_suffix: 'callback',
                                    # Specify any additional provider specific options
                                    name_identifier_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
                                    issuer: 'salsify.com',
