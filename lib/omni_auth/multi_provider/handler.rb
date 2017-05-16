@@ -7,16 +7,15 @@ module OmniAuth
 
       def initialize(path_prefix:,
                      identity_provider_id_regex:,
-                     **options,
+                     callback_suffix: 'callback',
+                     **_options,
                      &identity_provider_options_generator)
         raise 'Missing provider options generator block' unless block_given?
 
         @path_prefix = path_prefix
         @identity_provider_options_generator = identity_provider_options_generator
         @identity_provider_id_regex = identity_provider_id_regex
-
-        options = DEFAULT_OPTIONS.merge(options)
-        @callback_suffix = options[:callback_suffix]
+        @callback_suffix = callback_suffix
 
         # Eagerly compute these since lazy evaluation will not be threadsafe
         @provider_instance_path_regex = /^#{@path_prefix}\/(?<identity_provider_id>#{@identity_provider_id_regex})/
@@ -52,10 +51,6 @@ module OmniAuth
       end
 
       private
-
-      DEFAULT_OPTIONS = {
-        callback_suffix: 'callback'
-      }.freeze
 
       def add_path_options(strategy, identity_provider_id)
         strategy.options.merge!(
