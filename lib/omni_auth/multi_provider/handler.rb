@@ -2,7 +2,7 @@ module OmniAuth
   module MultiProvider
     class Handler
       attr_reader :path_prefix, :provider_instance_path_regex, :request_path_regex,
-                  :callback_path_regex, :callback_postfix,
+                  :callback_path_regex, :callback_suffix,
                   :identity_provider_options_generator
 
       def initialize(path_prefix:,
@@ -16,12 +16,12 @@ module OmniAuth
         @identity_provider_id_regex = identity_provider_id_regex
 
         options = DEFAULT_OPTIONS.merge(options)
-        @callback_postfix = options[:callback_postfix]
+        @callback_suffix = options[:callback_suffix]
 
         # Eagerly compute these since lazy evaluation will not be threadsafe
         @provider_instance_path_regex = /^#{@path_prefix}\/(?<identity_provider_id>#{@identity_provider_id_regex})/
         @request_path_regex = /#{@provider_instance_path_regex}\/?$/
-        @callback_path_regex = /#{@provider_instance_path_regex}\/#{@callback_postfix}\/?$/
+        @callback_path_regex = /#{@provider_instance_path_regex}\/#{@callback_suffix}\/?$/
       end
 
       def provider_options
@@ -54,13 +54,13 @@ module OmniAuth
       private
 
       DEFAULT_OPTIONS = {
-        callback_postfix: 'callback'
+        callback_suffix: 'callback'
       }.freeze
 
       def add_path_options(strategy, identity_provider_id)
         strategy.options.merge!(
           request_path: "#{path_prefix}/#{identity_provider_id}",
-          callback_path: "#{path_prefix}/#{identity_provider_id}/#{callback_postfix}"
+          callback_path: "#{path_prefix}/#{identity_provider_id}/#{callback_suffix}"
         )
       end
 
