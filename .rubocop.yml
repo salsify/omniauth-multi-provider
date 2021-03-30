@@ -6,3 +6,7 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'gemfiles/**/*'
+
+Naming/FileName:
+  Exclude:
+    - 'lib/omniauth-multi-provider.rb'
