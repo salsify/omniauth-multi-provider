@@ -1,5 +1,8 @@
 # omniauth-multi-provider
 
+## v0.3.0
+- Drop support for Ruby < 2.6
+
 ## v0.2.1
 - Update gemspec for minimum Ruby version of 2.1.
 
