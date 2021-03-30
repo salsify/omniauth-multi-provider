@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'omniauth'
 
 require 'omni_auth/multi_provider/handler'

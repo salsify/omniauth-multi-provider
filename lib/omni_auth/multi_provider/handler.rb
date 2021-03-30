@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OmniAuth
   module MultiProvider
     class Handler
@@ -62,7 +64,7 @@ module OmniAuth
       def add_identity_provider_options(strategy, env, identity_provider_id)
         identity_provider_options = identity_provider_options_generator.call(identity_provider_id, env) || {}
         strategy.options.merge!(identity_provider_options)
-      rescue => e
+      rescue StandardError => e
         result = strategy.fail!(:invalid_identity_provider, e)
         throw :warden, result
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe OmniAuth::MultiProvider do
   describe ".register" do
     let(:builder) { instance_double(OmniAuth::Builder, provider: nil) }

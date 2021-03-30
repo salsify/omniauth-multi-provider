@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe OmniAuth::MultiProvider::Handler do
   let(:dynamic_provider_options) do
     {
