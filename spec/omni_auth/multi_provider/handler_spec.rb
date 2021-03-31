@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe OmniAuth::MultiProvider::Handler do
   let(:dynamic_provider_options) do
     {
@@ -11,7 +13,12 @@ describe OmniAuth::MultiProvider::Handler do
 
   let(:path_prefix) { '/auth/saml' }
   let(:handler) do
-    described_class.new(path_prefix: path_prefix, identity_provider_id_regex: /\d+/, **handler_options, &provider_options_generator)
+    described_class.new(
+      path_prefix: path_prefix,
+      identity_provider_id_regex: /\d+/,
+      **handler_options,
+      &provider_options_generator
+    )
   end
 
   let(:handler_options) do

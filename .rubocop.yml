@@ -1,2 +1,12 @@
 inherit_gem:
   salsify_rubocop: conf/rubocop.yml
+
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+    - 'vendor/**/*'
+    - 'gemfiles/**/*'
+
+Naming/FileName:
+  Exclude:
+    - 'lib/omniauth-multi-provider.rb'
