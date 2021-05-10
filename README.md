@@ -55,7 +55,7 @@ end
 The basic configuration of OmniAuth looks something like this:
 
 ```ruby
-# config/omniauth.rb
+# config/initializers/omniauth.rb
 Rails.application.config.middleware.use OmniAuth::Builder do
   OmniAuth::MultiProvider.register(self,
                                    provider_name: :saml,
