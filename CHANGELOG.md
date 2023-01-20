@@ -1,5 +1,9 @@
 # omniauth-multi-provider
 
+## v0.4.0
+- Drop support for Ruby 2.6
+- Add support for Ruby 3.1 and 3.2
+
 ## v0.3.0
 - Drop support for Ruby < 2.6.
 - Add support for Ruby 3.0.
