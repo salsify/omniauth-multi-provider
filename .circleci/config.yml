@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: salsify/ruby_ci:2.7.7
+      - image: cimg/ruby:2.7.7
     working_directory: ~/omniauth-multi-provider
     steps:
       - checkout
@@ -30,7 +30,7 @@ jobs:
       ruby_version:
         type: string
     docker:
-      - image: salsify/ruby_ci:<< parameters.ruby_version >>
+      - image: cimg/ruby:<< parameters.ruby_version >>
     environment:
       CIRCLE_TEST_REPORTS: "test-results"
     working_directory: ~/omniauth-multi-provider
